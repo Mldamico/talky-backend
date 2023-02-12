@@ -112,6 +112,7 @@
       }
     ],
     "paths": {
+      "@user/*": ["src/features/user/*"],
       "@auth/*": ["src/features/auth/*"],
       "@global/*": ["src/shared/globals/*"],
       "@service/*": ["src/shared/services/*"],
