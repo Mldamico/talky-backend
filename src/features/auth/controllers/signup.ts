@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { Request, response } from "express";
+import { Request, Response } from "express";
 import { joiValidation } from "@global/decorators/joi-validation.decorators";
 import { signupSchema } from "@auth/schemes/signup";
 import { IAuthDocument, ISignUpData } from "../interfaces/auth.interface";
@@ -8,6 +8,7 @@ import { BadRequestError } from "@global/helpers/error-handler";
 import { Helpers } from "@global/helpers/helpers";
 import { UploadApiResponse } from "cloudinary";
 import { uploads } from "../../../shared/globals/helpers/cloudinary-upload";
+import HTTP_STATUS from "http-status-codes";
 
 export class Signup {
   @joiValidation(signupSchema)
@@ -39,6 +40,10 @@ export class Signup {
     if (!result?.public_id) {
       throw new BadRequestError("File upload: Something wrong happened");
     }
+
+    res
+      .status(HTTP_STATUS.ACCEPTED)
+      .json({ message: "User created successfully", authData });
   }
 
   private signupData(data: ISignUpData): IAuthDocument {
