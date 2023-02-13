@@ -49,8 +49,8 @@ export class Signup {
       authData,
       userObjectId
     );
-    userDataForCache.profilePicture = `https://res/cloudinary.com/arecyus/image/upload/v${result.version}/${userObjectId}`;
-
+    userDataForCache.profilePicture = `https://res.cloudinary.com/arecyus/image/upload/v${result.version}/${userObjectId}`;
+    await userCache.saveUserToCache(`${userObjectId}`, uId, userDataForCache);
     res
       .status(HTTP_STATUS.ACCEPTED)
       .json({ message: "User created successfully", authData });
