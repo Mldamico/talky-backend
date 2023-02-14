@@ -8,6 +8,8 @@ import { authService } from "@service/db/auth.service";
 import { BadRequestError } from "@global/helpers/error-handler";
 import { signinSchema } from "@auth/schemes/signin";
 import { IAuthDocument } from "../interfaces/auth.interface";
+import { IUserDocument } from "../../user/interfaces/user.interface";
+import { userService } from "../../../shared/services/db/user.service";
 
 export class SignIn {
   @joiValidation(signinSchema)
@@ -24,9 +26,14 @@ export class SignIn {
     if (!passwordMatch) {
       throw new BadRequestError("invalid credentials");
     }
+
+    const user: IUserDocument = await userService.getUserByAuthId(
+      `${existingUser._id}`
+    );
+
     const userJWT: string = JWT.sign(
       {
-        userId: existingUser._id,
+        userId: user._id,
         uId: existingUser.uId,
         email: existingUser.email,
         username: existingUser.username,
@@ -35,12 +42,10 @@ export class SignIn {
       config.JWT_TOKEN!
     );
     req.session = { jwt: userJWT };
-    res
-      .status(HTTP_STATUS.OK)
-      .json({
-        message: "User login successfully",
-        user: existingUser,
-        token: userJWT,
-      });
+    res.status(HTTP_STATUS.OK).json({
+      message: "User login successfully",
+      user: existingUser,
+      token: userJWT,
+    });
   }
 }
