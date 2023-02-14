@@ -13,7 +13,9 @@ import { IUserDocument } from "../../user/interfaces/user.interface";
 import { UserCache } from "@service/redis/user.cache";
 import { omit } from "lodash";
 import { authQueue } from "@service/queues/auth.queue";
-
+import { userQueue } from "../../../shared/services/queues/user.queue";
+import JWT from "jsonwebtoken";
+import { config } from "@root/config";
 const userCache: UserCache = new UserCache();
 
 export class Signup {
@@ -62,10 +64,32 @@ export class Signup {
       "password",
     ]);
     authQueue.addAuthUserJob("addAuthUserToDB", { value: userDataForCache });
+    userQueue.addUserJob("addUserToDB", { value: userDataForCache });
 
-    res
-      .status(HTTP_STATUS.ACCEPTED)
-      .json({ message: "User created successfully", authData });
+    const userJWT: string = Signup.prototype.signUpToken(
+      authData,
+      userObjectId
+    );
+    req.session = { jwt: userJWT };
+
+    res.status(HTTP_STATUS.ACCEPTED).json({
+      message: "User created successfully",
+      user: userDataForCache,
+      token: userJWT,
+    });
+  }
+
+  private signUpToken(data: IAuthDocument, userObjectId: ObjectId): string {
+    return JWT.sign(
+      {
+        userId: userObjectId,
+        uId: data.uId,
+        email: data.email,
+        username: data.username,
+        avatarColor: data.avatarColor,
+      },
+      config.JWT_TOKEN!
+    );
   }
 
   private signupData(data: ISignUpData): IAuthDocument {
