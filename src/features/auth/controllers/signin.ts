@@ -42,9 +42,18 @@ export class SignIn {
       config.JWT_TOKEN!
     );
     req.session = { jwt: userJWT };
+    const userDocument: IUserDocument = {
+      ...user,
+      authId: existingUser.id,
+      username: existingUser.username,
+      email: existingUser.email,
+      avatarColor: existingUser.avatarColor,
+      uId: existingUser.uId,
+      createdAt: existingUser.createdAt,
+    } as IUserDocument;
     res.status(HTTP_STATUS.OK).json({
       message: "User login successfully",
-      user: existingUser,
+      user: userDocument,
       token: userJWT,
     });
   }
