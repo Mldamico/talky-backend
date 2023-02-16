@@ -2,6 +2,12 @@
 @urlPath = api/v1
 
 ###
+GET {{baseUrl}}/{{urlPath}}/currentuser
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
 GET {{baseUrl}}/{{urlPath}}/signout
 Content-Type: application/json
 Accept: application/json

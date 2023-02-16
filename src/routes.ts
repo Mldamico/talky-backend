@@ -1,3 +1,4 @@
+import { currentUserRoutes } from "@auth/routes/currentRoutes";
 import { Application } from "express";
 import { authRoutes } from "./features/auth/routes/authRoutes";
 import { serverAdapter } from "./shared/services/queues/base.queue";
@@ -9,6 +10,7 @@ export default (app: Application) => {
     app.use("/queues", serverAdapter.getRouter());
     app.use(BASE_PATH, authRoutes.routes());
     app.use(BASE_PATH, authRoutes.signoutRoutes());
+    app.use(BASE_PATH, currentUserRoutes.routes());
   };
   routes();
 };

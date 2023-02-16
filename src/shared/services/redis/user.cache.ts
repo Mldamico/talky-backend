@@ -103,7 +103,7 @@ export class UserCache extends BaseCache {
       throw new ServerError("Server error. Try again.");
     }
   }
-
+  //if i hadn't this class, I would have picked him already
   public async getUserFromCache(userId: string): Promise<IUserDocument | null> {
     try {
       if (!this.client.isOpen) {
