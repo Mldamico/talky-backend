@@ -21,6 +21,7 @@ class UserService {
       { $unwind: "$authId" },
       { $project: this.aggregateProject() },
     ]);
+
     return users[0];
   }
 
@@ -38,6 +39,7 @@ class UserService {
       { $unwind: "$authId" },
       { $project: this.aggregateProject() },
     ]);
+
     return users[0];
   }
 
@@ -49,7 +51,7 @@ class UserService {
       email: "$authId.email",
       avatarColor: "$authId.avatarColor",
       createdAt: "$authId.createdAt",
-      postCount: 1,
+      postsCount: 1,
       work: 1,
       school: 1,
       quote: 1,

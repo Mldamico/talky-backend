@@ -11,8 +11,9 @@ export class CurrentUser {
     let isUser = false;
     let token = null;
     let user = null;
+
     const cachedUser: IUserDocument = (await userCache.getUserFromCache(
-      `${req.currentUser?.uId}`
+      `${req.currentUser?.userId}`
     )) as IUserDocument;
     const existingUser: IUserDocument = cachedUser
       ? cachedUser
@@ -22,6 +23,7 @@ export class CurrentUser {
       token = req.session?.jwt;
       user = existingUser;
     }
+
     res.status(HTTP_STATUS.OK).json({ token, isUser, user });
   }
 }
