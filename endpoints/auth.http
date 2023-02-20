@@ -2,6 +2,28 @@
 @urlPath = api/v1
 
 ###
+POST {{baseUrl}}/{{urlPath}}/forgot-password
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "email": "probando17@gmail.com"
+}
+
+###
+POST {{baseUrl}}/{{urlPath}}/reset-password/ec932fee72ecfc9f5f75c5802cd9f703144a6eb3
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "password":"n123456",
+  "confirmPassword": "n123456"
+}
+
+
+###
 GET {{baseUrl}}/{{urlPath}}/currentuser
 Content-Type: application/json
 Accept: application/json

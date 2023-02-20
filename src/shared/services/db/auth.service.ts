@@ -46,11 +46,19 @@ class AuthService {
 
   public async getUserByEmail(email: string): Promise<IAuthDocument> {
     const query = {
-      username: Helpers.lowerCase(email),
+      email: Helpers.lowerCase(email),
     };
     const user: IAuthDocument = (await AuthModel.findOne(
       query
     ).exec()) as IAuthDocument;
+    return user;
+  }
+
+  public async getUserByPasswordToken(token: string): Promise<IAuthDocument> {
+    const user: IAuthDocument = (await AuthModel.findOne({
+      passwordResetToken: token,
+      passwordResetExpires: { $gt: Date.now() },
+    }).exec()) as IAuthDocument;
     return user;
   }
 }
