@@ -10,7 +10,8 @@
     "lint:fix": "eslint 'src/**/*.ts' --fix",
     "prettier:check": "prettier --check 'src/**/*.{ts,json}'",
     "prettier:fix": "prettier --white 'src/**/*.{ts,json}'",
-    "build": "ttsc -p ."
+    "build": "ttsc -p .",
+    "test": "jest --coverage=true -w=1 --forceExit --detectOpenHandles --watchAll=true"
   },
   "keywords": [],
   "author": "",
