@@ -27,12 +27,12 @@ export class SignIn {
       username
     );
     if (!existingUser) {
-      throw new BadRequestError("invalid credentials");
+      throw new BadRequestError("Invalid credentials");
     }
 
     const passwordMatch: Boolean = await existingUser.comparePassword(password);
     if (!passwordMatch) {
-      throw new BadRequestError("invalid credentials");
+      throw new BadRequestError("Invalid credentials");
     }
 
     const user: IUserDocument = await userService.getUserByAuthId(

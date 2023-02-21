@@ -19,7 +19,7 @@ export class Password {
     const { email } = req.body;
     const existingUser: IAuthDocument = await authService.getUserByEmail(email);
     if (!existingUser) {
-      throw new BadRequestError("invalid credentials");
+      throw new BadRequestError("Invalid credentials");
     }
     const randBytes: Buffer = await Promise.resolve(crypto.randomBytes(20));
     const randomCharacters: string = randBytes.toString("hex");
