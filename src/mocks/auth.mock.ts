@@ -15,6 +15,7 @@ export interface IAuthMock {
   avatarColor?: string;
   avatarImage?: string;
   password?: string;
+  confirmPassword?: string;
   uId?: string;
   createdAt?: Date | string;
 }

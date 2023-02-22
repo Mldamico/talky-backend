@@ -9,8 +9,6 @@ import { CustomError } from "@global/helpers/error-handler";
 import { SignIn } from "@auth/controllers/signin";
 import { Helpers } from "@global/helpers/helpers";
 import { authService } from "@service/db/auth.service";
-import { userService } from "@service/db/user.service";
-import { mergedAuthAndUserData } from "@root/mocks/user.mock";
 
 const USERNAME = "Test";
 const PASSWORD = "123456";
@@ -146,25 +144,23 @@ describe("SignIn", () => {
     });
   });
 
-  // it("should set session data for valid credentials and send correct json response", async () => {
-  //   const req: Request = authMockRequest(
-  //     {},
-  //     { username: USERNAME, password: PASSWORD }
-  //   ) as Request;
-  //   const res: Response = authMockResponse();
-  //   authMock.comparePassword = () => Promise.resolve(true);
-  //   jest.spyOn(authService, "getUserByUsername").mockResolvedValue(authMock);
-  //   jest
-  //     .spyOn(userService, "getUserByAuthId")
-  //     .mockRejectedValue(mergedAuthAndUserData);
+  it("should set session data for valid credentials and send correct json response", async () => {
+    const req: Request = authMockRequest(
+      {},
+      { username: USERNAME, password: PASSWORD }
+    ) as Request;
+    const res: Response = authMockResponse();
+    authMock.comparePassword = () => Promise.resolve(true);
+    jest.spyOn(authService, "getUserByUsername").mockResolvedValue(authMock);
 
-  //   await SignIn.prototype.read(req, res);
-  //   expect(req.session?.jwt).toBeDefined();
-  //   expect(res.status).toHaveBeenCalledWith(200);
-  //   expect(res.json).toHaveBeenCalledWith({
-  //     message: "User login successfully",
-  //     user: mergedAuthAndUserData,
-  //     token: req.session?.jwt,
-  //   });
-  // });
+    SignIn.prototype.read(req, res).then(() => {
+      expect(req.session?.jwt).toBeDefined();
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        message: "User login successfully",
+        user: authMock,
+        token: req.session?.jwt,
+      });
+    });
+  });
 });

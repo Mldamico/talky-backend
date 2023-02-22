@@ -49,7 +49,7 @@ export class Password {
     const existingUser: IAuthDocument =
       await authService.getUserByPasswordToken(token);
     if (!existingUser) {
-      throw new BadRequestError("reset token has expired");
+      throw new BadRequestError("Reset token has expired");
     }
     existingUser.password = password;
     existingUser.passwordResetExpires = undefined;
@@ -73,6 +73,6 @@ export class Password {
     });
     res
       .status(HTTP_STATUS.OK)
-      .json({ message: "Password Successfully Updated." });
+      .json({ message: "Password successfully updated." });
   }
 }
