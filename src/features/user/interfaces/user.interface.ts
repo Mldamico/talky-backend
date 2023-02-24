@@ -9,7 +9,7 @@ export interface IUserDocument extends Document {
   password?: string;
   avatarColor?: string;
   uId?: string;
-  postCount: number;
+  postsCount: number;
   work: string;
   school: string;
   quote: string;

@@ -1,9 +1,9 @@
-import { ServerError } from "@global/helpers/error-handler";
-import { Helpers } from "@global/helpers/helpers";
-import { config } from "@root/config";
 import { BaseCache } from "@service/redis/base.cache";
 import { IUserDocument } from "@user/interfaces/user.interface";
 import Logger from "bunyan";
+import { config } from "@root/config";
+import { ServerError } from "@global/helpers/error-handler";
+import { Helpers } from "@global/helpers/helpers";
 
 const log: Logger = config.createLogger("userCache");
 
@@ -26,7 +26,7 @@ export class UserCache extends BaseCache {
       avatarColor,
       blocked,
       blockedBy,
-      postCount,
+      postsCount,
       profilePicture,
       followersCount,
       followingCount,
@@ -39,7 +39,6 @@ export class UserCache extends BaseCache {
       bgImageVersion,
       social,
     } = createdUser;
-
     const firstList: string[] = [
       "_id",
       `${_id}`,
@@ -53,8 +52,8 @@ export class UserCache extends BaseCache {
       `${avatarColor}`,
       "createdAt",
       `${createdAt}`,
-      "postCount",
-      `${postCount}`,
+      "postsCount",
+      `${postsCount}`,
     ];
     const secondList: string[] = [
       "blocked",
@@ -72,7 +71,6 @@ export class UserCache extends BaseCache {
       "social",
       JSON.stringify(social),
     ];
-
     const thirdList: string[] = [
       "work",
       `${work}`,
@@ -82,10 +80,10 @@ export class UserCache extends BaseCache {
       `${school}`,
       "quote",
       `${quote}`,
-      "bgImageId",
-      `${bgImageId}`,
       "bgImageVersion",
       `${bgImageVersion}`,
+      "bgImageId",
+      `${bgImageId}`,
     ];
     const dataToSave: string[] = [...firstList, ...secondList, ...thirdList];
 
@@ -103,27 +101,25 @@ export class UserCache extends BaseCache {
       throw new ServerError("Server error. Try again.");
     }
   }
-  //if i hadn't this class, I would have picked him already
+
   public async getUserFromCache(userId: string): Promise<IUserDocument | null> {
     try {
       if (!this.client.isOpen) {
         await this.client.connect();
       }
+
       const response: IUserDocument = (await this.client.HGETALL(
         `users:${userId}`
       )) as unknown as IUserDocument;
       response.createdAt = new Date(Helpers.parseJson(`${response.createdAt}`));
-      response.postCount = Helpers.parseJson(`${response.postCount}`);
+      response.postsCount = Helpers.parseJson(`${response.postsCount}`);
       response.blocked = Helpers.parseJson(`${response.blocked}`);
       response.blockedBy = Helpers.parseJson(`${response.blockedBy}`);
-      response.work = Helpers.parseJson(`${response.work}`);
-      response.school = Helpers.parseJson(`${response.school}`);
-      response.location = Helpers.parseJson(`${response.location}`);
-      response.quote = Helpers.parseJson(`${response.quote}`);
       response.notifications = Helpers.parseJson(`${response.notifications}`);
       response.social = Helpers.parseJson(`${response.social}`);
-      response.followingCount = Helpers.parseJson(`${response.followingCount}`);
       response.followersCount = Helpers.parseJson(`${response.followersCount}`);
+      response.followingCount = Helpers.parseJson(`${response.followingCount}`);
+
       return response;
     } catch (error) {
       log.error(error);
