@@ -1,10 +1,12 @@
 import { joiValidation } from "@global/decorators/joi-validation.decorators";
 import { postSchema } from "@post/schemes/post.schemes";
 import { PostCache } from "@service/redis/post.cache";
+import { socketIOPostObject } from "@socket/post";
 import { Request, Response } from "express";
 import HTTP_STATUS from "http-status-codes";
 import { ObjectId } from "mongodb";
 import { IPostDocument } from "../interfaces/post.interface";
+import { postQueue } from "../../../shared/services/queues/post.queue";
 
 const postCache = new PostCache();
 export class CreatePost {
@@ -38,6 +40,13 @@ export class CreatePost {
       currentUserId: `${req.currentUser!.userId}`,
       uId: `${req.currentUser!.uId}`,
       createdPost,
+    });
+
+    socketIOPostObject.emit("add post", createdPost);
+
+    postQueue.addPostJob("addPostToDB", {
+      key: req.currentUser!.userId,
+      value: createdPost,
     });
 
     res
